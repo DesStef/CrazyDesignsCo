@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Crazy Designs Co</title>
+    <link rel="stylesheet" href="/css/reset-css.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <script src="/js/jquery-3.5.1.slim.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<div th:replace="fragments/navbar">Navbar</div>
+
+
+<div class="container-fluid">
+    <div class="container" th:if="${count}">
+        <div class="align-content-center">
+            <h2 class="text-center text-warning font-weight-bold">
+                There are no designs marked with 'Room Type: Other' yet.
+            </h2>
+        </div>
+        <div class="align-content-center">
+            <h2 class="text-center text-warning font-weight-bold">
+                Great job!
+            </h2>
+        </div>
+        <div class="text-center">
+            <img alt="more picture" th:src="@{/images/more-to-come-2.jpg}">
+        </div>
+    </div>
+    <h2 th:unless="${count}" class="text-center mt-5 pb-1">Designs marked with 'Room Type: Other' for review </h2>
+    <div class="offers row mx-auto d-flex flex-row justify-content-center" style="margin-top: 40px;">
+        <div th:each="design : ${designsRoomTypeOther.getContent()}"
+             th:object="${design}"
+             class="offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0">
+            <!--             class="offers row mx-auto d-flex flex-row justify-content-center">-->
+            <!--            <div class="offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0">-->
+            <div class="card-img-top-wrapper">
+                <img class="card-img-top" th:src="*{imageUrl}" alt="Design image">
+            </div>
+            <div class="card-body pb-1">
+                <h5 class="card-title">
+                    <th:block th:text="*{designHighlight}"></th:block>
+                </h5>
+            </div>
+            <ul class="offer-details list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="card-text"><span class="card-text font-weight-bold">• Room: </span>
+                        <span class="card-text font-weight-normal" th:text="*{roomType}"></span></div>
+                    <div class="card-text"><span class="card-text font-weight-bold">• Style: </span>
+                        <span class="card-text font-weight-normal" th:text="*{style}"></span></div>
+                    <div class="card-text"><span class="card-text font-weight-bold">• Date: </span>
+                        <span class="card-text font-weight-normal" th:text="*{date}"></span></div>
+                    <div class="card-text"><span class="card-text font-weight-bold">• Price: </span>
+                        <span class="card-text font-weight-normal" th:text="*{price}"></span></div>
+                    <!--                    <div class="card-text"><span>• Room:  <th:block th:text="*{roomType}"></th:block></span></div>-->
+                    <!--                    <div class="card-text"><span>• Style:  <th:block th:text="*{style}"></th:block> </span></div>-->
+                    <!--                    <div class="card-text"><span>• Date:  <th:block th:text="*{date}"></th:block> </span></div>-->
+                    <!--                    <div class="card-text"><span>• Price:  <th:block th:text="*{price}"></th:block></span></div>-->
+                </li>
+            </ul>
+            <div class="card-body">
+                <a class="card-img font-weight-bold" th:href="@{/designs/{designId}(designId=*{id})}">Details</a>
+            </div>
+        </div>
+    </div>
+    <h2 th:if="${designsRoomTypeOther != null && designsRoomTypeOther.size == 0}" class="text-center text-danger">
+        There are no designs with the selected
+        criteria yet</h2>
+</div>
+
+<div th:unless="${count}" class="container-fluid container-fluid row justify-content-center">
+    <nav>
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${designsRoomTypeOther.isFirst()} ? 'disabled' : ''">
+                <a th:unless="${designsRoomTypeOther.isFirst()}"
+                   th:href="@{/designs/room-type/other(size=${designsRoomTypeOther.getSize()},page=0)}"
+                   class="page-link" href="#">First</a>
+                <a th:if="${designsRoomTypeOther.isFirst()}"
+                   class="page-link" href="#">First</a>
+            </li>
+        </ul>
+    </nav>
+    <nav>
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${designsRoomTypeOther.hasPrevious() ? '' : 'disabled'}">
+                <a th:if="${designsRoomTypeOther.hasPrevious()}"
+                   th:href="@{/designs/room-type/other(size=${designsRoomTypeOther.getSize()},page=${designsRoomTypeOther.getNumber() - 1})}"
+                   class="page-link" href="#">Previous</a>
+                <a th:unless="${designsRoomTypeOther.hasPrevious()}"
+                   class="page-link" href="#">Previous</a>
+            </li>
+        </ul>
+    </nav>
+    <nav>
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${designsRoomTypeOther.hasNext() ? '' : 'disabled'}">
+                <a th:if="${designsRoomTypeOther.hasNext()}"
+                   th:href="@{/designs/room-type/other(size=${designsRoomTypeOther.getSize()},page=${designsRoomTypeOther.getNumber() + 1})}"
+                   class="page-link" href="#">Next</a>
+                <a th:unless="${designsRoomTypeOther.hasNext()}"
+                   class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+    <nav>
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${designsRoomTypeOther.isLast()} ? 'disabled' : ''">
+                <a th:unless="${designsRoomTypeOther.isLast()}"
+                   th:href="@{/designs/room-type/other(size=${designsRoomTypeOther.getSize()},page=${designsRoomTypeOther.getTotalPages() - 1})}"
+                   class="page-link" href="#">Last</a>
+                <a th:if="${designsRoomTypeOther.isLast()}"
+                   class="page-link" href="#">Last</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div>
+    <footer></footer>
+</div>
+
+</body>
+</html>

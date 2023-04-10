@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Crazy Designs Co</title>
+    <link rel="stylesheet" href="/css/reset-css.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <script src="/js/jquery-3.5.1.slim.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<div th:replace="fragments/navbar">Navbar</div>
+
+<div class="container-fluid">
+    <h2 class="text-center mt-5 pb-1">Users preview</h2>
+    <div class="offers row mx-auto d-flex flex-row justify-content-center" style="margin-top: 40px;">
+
+        <form th:each="user : ${users.getContent()}"
+              th:object="${user}"
+              class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
+            <!--         class="offers row mx-auto d-flex flex-row justify-content-center">-->
+            <!--        <div class="offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0">-->
+
+            <div class="row justify-content-center">
+                <div class="form-group col-md-1 mb-2 flex-column justify-content-center">
+                    <label for="id" class="text-white font-weight-bold">User ID</label>
+                    <div id="id"
+                         th:text="*{id}"
+                         class="form-control"
+                    ></div>
+                </div>
+                <div class="form-group col-md-3 mb-2 flex-column justify-content-center">
+                    <label for="firstName" class="text-white font-weight-bold">First name</label>
+                    <div id="firstName"
+                         th:text="*{firstName}"
+                         class="form-control"
+                    ></div>
+                </div>
+                <div class="form-group col-md-3 mb-2 flex-column justify-content-center">
+                    <label for="lastName" class="text-white font-weight-bold">Last name</label>
+                    <div id="lastName"
+                         th:text="*{lastName}"
+                         class="form-control"
+                    ></div>
+                </div>
+                <div class="form-group col-md-3 mb-2 flex-column justify-content-center">
+                    <label for="email" class="text-white font-weight-bold">Email</label>
+                    <div id="email"
+                         th:text="*{email}"
+                         class="form-control"
+                    ></div>
+                </div>
+                <!--                <div class="col col-md-3 mb-3 align-items-md-center">-->
+                <div class="form-group flex-column justify-content-center">
+                    <label for="email" class="text-white font-weight-bold"></label>
+                    <div class="button-holder">
+                        <a th:href="@{/users/profile/{id}(id=*{id})}" class="btn btn-info btn-lg">Edit User Profile</a>
+                    </div>
+                </div>
+                <!--                Delete is not working-->
+                <!--                <div class="col col-md-4">-->
+                <!--                    <div class="button-holder d-flex">-->
+                <!--                        <form-->
+                <!--                                th:action="@{/users/{id}(id=*{id})}"-->
+                <!--                                th:method="delete"-->
+                <!--                        >-->
+                <!--                            <input type="submit" value="Delete" class="btn btn-outline-dark btn-lg">-->
+                <!--                        </form>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+            </div>
+        </form>
+        <div class="container-fluid">
+            <form th:if="${updatedUserProfile}">
+                <h2 class="text-center text-danger">You have successfully updated the details of a user with id:
+                    <a th:text="*{userId}"></a>.</h2>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="container-fluid container-fluid row justify-content-center">
+        <nav>
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${users.isFirst()} ? 'disabled' : ''">
+                    <a th:unless="${users.isFirst()}"
+                       th:href="@{/users/all(size=${users.getSize()},page=0)}"
+                       class="page-link" href="#">First</a>
+                    <a th:if="${users.isFirst()}"
+                       class="page-link" href="#">First</a>
+                </li>
+            </ul>
+        </nav>
+        <nav>
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${users.hasPrevious() ? '' : 'disabled'}">
+                    <a th:if="${users.hasPrevious()}"
+                       th:href="@{/users/all(size=${users.getSize()},page=${users.getNumber() - 1})}"
+                       class="page-link" href="#">Previous</a>
+                    <a th:unless="${users.hasPrevious()}"
+                       class="page-link" href="#">Previous</a>
+                </li>
+            </ul>
+        </nav>
+        <nav>
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${users.hasNext() ? '' : 'disabled'}">
+                    <a th:if="${users.hasNext()}"
+                       th:href="@{/users/all(size=${users.getSize()},page=${users.getNumber() + 1})}"
+                       class="page-link" href="#">Next</a>
+                    <a th:unless="${users.hasNext()}"
+                       class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+        <nav>
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${users.isLast()} ? 'disabled' : ''">
+                    <a th:unless="${users.isLast()}"
+                       th:href="@{/users/all(size=${users.getSize()},page=${users.getTotalPages() - 1})}"
+                       class="page-link" href="#">Last</a>
+                    <a th:if="${users.isLast()}"
+                       class="page-link" href="#">Last</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<div>
+    <footer></footer>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+spring:
+    datasource:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/designCo?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
+        username:
+        password: 
+    jpa:
+        database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+        hibernate:
+            ddl-auto: create-drop
+        defer-datasource-initialization: true
+    mvc:
+        hiddenmethod:
+            filter:
+                enabled: true
+        format:
+            date: iso
+    security:
+        oauth2:
+            client:
+                registration:
+                    facebook:
+                        client-id: tbp
+                        client-secret: tbp
+    sql:
+        init:
+            mode: always
+
+logging:
+    level:
+        org.hibernate.SQL: DEBUG
+        org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+mail:
+    host: "localhost"
+    port: 1025
+    username: "designco@designco.com"
+    password: ""
+
+management:
+    server:
+        port: 8081
+    endpoints:
+        web:
+            base-path: /actuator
+            exposure:
+                include: "*"

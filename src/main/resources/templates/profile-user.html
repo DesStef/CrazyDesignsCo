@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Crazy Designs Co</title>
+    <link rel="stylesheet" href="/css/reset-css.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <script src="/js/jquery-3.5.1.slim.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+
+<div th:replace="fragments/navbar">Navbar</div>
+
+
+<div class="container-fluid">
+
+    <h2 class="text-center text-dark">Update profile</h2>
+    <form th:action="@{/users/profile/{id}(id=*{id})}"
+          th:method="post"
+          th:object="${userUpdateDTO}"
+          class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
+        <div class="row">
+            <div class="form-group col-md-6 mb-3">
+                <label for="firstName" class="text-white font-weight-bold">First Name</label>
+                <input
+                        id="firstName" required
+                        th:field="*{firstName}"
+                        th:errorclass="is-invalid"
+                        type="text"
+                        class="form-control"
+                        placeholder="First name"/>
+                <p class="invalid-feedback errors alert alert-danger">
+                    First name is required and should be between 2 and 20 symbols.
+                </p>
+            </div>
+            <div class="form-group col-md-6 mb-3">
+                <label for="lastName" class="text-white font-weight-bold">Last Name</label>
+                <input id="lastName" required
+                       th:field="*{lastName}"
+                       th:errorclass="is-invalid"
+                       type="text"
+                       class="form-control"
+                       placeholder="Last name"/>
+                <p class="invalid-feedback errors alert alert-danger">
+                    Last name is required and should be between 2 and 20 symbols.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6 mb-3">
+                <label for="email" class="text-white font-weight-bold">Email</label>
+                <input id="email" required
+                       th:field="*{email}"
+                       th:errorclass="is-invalid"
+                       type="text"
+                       class="form-control"
+                       placeholder="Email"/>
+                <div th:if="${emailFound}" id="email1"
+                     class="form-text text-danger">There is already a registered user with this email.
+                </div>
+                <div class="invalid-feedback errors alert alert-danger">
+                    <div
+                            th:each="err : ${#fields.errors('email')}"
+                            th:text="${err}">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-6 mb-3">
+                <label for="phone" class="text-white font-weight-bold">Phone number</label>
+                <input id="phone"
+                       th:field="*{phone}"
+                       th:errorclass="is-invalid"
+                       type="text"
+                       class="form-control"
+                       placeholder="Phone number"/>
+                <p class="invalid-feedback errors alert alert-danger">
+                    Phone number is required and should be between 5 and 20 symbols.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6 mb-3">
+                <label for="password" class="text-white font-weight-bold">Reset User Password: min 5 symbols</label>
+                <input id="password"
+                       th:field="*{password}"
+                       type="password"
+                       class="form-control"
+                       placeholder="Password"/>
+<!--                <p class="invalid-feedback errors alert alert-danger">-->
+<!--                    Password is required and should be at least 5 symbols.-->
+<!--                </p>-->
+            </div>
+            <div class="form-group col-md-6 mb-3">
+                <label for="confirmPassword" class="text-white font-weight-bold">Repeat Password</label>
+                <input
+                        id="confirmPassword"
+                        th:field="*{confirmPassword}"
+                        type="password"
+                        class="form-control"
+                        placeholder="Repeat password"
+                />
+                <div th:if="${passNoMatch}" id="confirmPassword1" class="form-text text-danger">
+                    The passwords do not match, please try again.
+                </div>
+            </div>
+        </div>
+
+        <!--            <div class="form-group col-md-6 mb-3">-->
+        <!--                <label class="text-center text-white font-weight-bold" for="userRoleEnum">User role</label>-->
+        <!--                <select id="userRoleEnum"-->
+        <!--                        name="userRoleEnum"-->
+        <!--                        th:errorclass="is-invalid"-->
+        <!--                        class="form-control">-->
+        <!--                    <option value="">- Select room type -</option>-->
+        <!--                    <option th:each="u : ${T(bg.finalexam.crazydesignsco.model.enums.UserRoleEnum).values()}"-->
+        <!--                            th:text="${u}"-->
+        <!--                            th:value="${u}"-->
+        <!--                            th:selected="${u} == *{userRoleEnum}">-->
+        <!--                        User role-->
+        <!--                    </option>-->
+        <!--                </select>-->
+        <!--                <p class="invalid-feedback errors alert alert-danger">-->
+        <!--                    Please enter one of the following user roles.-->
+        <!--                </p>-->
+        <div class="row">
+            <div class="form-group col-md-6 mb-3">
+                <label class="text-center text-white font-weight-bold">Current User roles</label>
+                <div class="form-control" th:text="${userRoles}"></div>
+            </div>
+            <div class="form-group col-md-6 mb-3">
+                <label class="text-center text-white font-weight-bold" for="userRole">Add or Remove Role</label>
+                <select id="userRole"
+                        name="userRole"
+                        class="form-control">
+                    <option value="">- Select role -</option>
+                    <option
+                            th:each="userRole : ${T(bg.finalexam.crazydesignsco.model.enums.UserRoleEnum).values()}"
+                            th:text="${userRole}"
+                            th:value="${userRole}">
+                    </option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="form-group col-md-6 mb-3">
+                <label for="wantDeletion" class="text-white font-weight-bold">Do you want to mark this user
+                    for deletion?</label>
+                <input
+                        id="wantDeletion"
+                        th:field="*{wantDeletion}"
+                        type="checkbox"
+                        placeholder="wantDeletion"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col col-md-4">
+                <div class="button-holder d-flex">
+                    <input type="submit" class="btn btn-info btn-lg" value="Save profile"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div>
+    <footer></footer>
+</div>
+
+</body>
+</html>

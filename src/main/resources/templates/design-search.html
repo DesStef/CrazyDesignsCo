@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Crazy Designs Co</title>
+    <link rel="stylesheet" href="/css/reset-css.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <script src="/js/jquery-3.5.1.slim.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<div th:replace="fragments/navbar">Navbar</div>
+
+<div class="container">
+    <h2 class="text-center mt-2 pb-1">Search for specific designs</h2>
+    <form
+            th:method="GET"
+            th:action="@{/designs/search}"
+            th:object="${searchDesignModel}"
+            class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
+        <div class="form-group">
+            <!--        <div class="form-group" style="position: relative">-->
+            <div class="row">
+                <div class="form-group col-md-6 mb-3">
+                    <label class="text-center text-white font-weight-bold" for="roomType">Style</label>
+                    <select id="roomType"
+                            name="roomType"
+                            th:errorclass="is-invalid"
+                            class="form-control">
+                        <option value="">- Select room type -</option>
+                        <option th:each="r : ${T(bg.finalexam.crazydesignsco.model.enums.RoomTypeEnum).values()}"
+                                th:text="${r}"
+                                th:value="${r}"
+                                th:selected="${r} == *{roomType}">
+                            Design style
+                        </option>
+                    </select>
+                    <p class="invalid-feedback errors alert alert-danger">
+                        Please enter one of the following room types.
+                    </p>
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label class="text-center text-white font-weight-bold" for="style">Design Style</label>
+                    <select id="style"
+                            name="style"
+                            th:errorclass="is-invalid"
+                            class="form-control">
+                        <option value="">- Select style -</option>
+                        <option th:each="s : ${T(bg.finalexam.crazydesignsco.model.enums.StyleEnum).values()}"
+                                th:text="${s}"
+                                th:value="${s}"
+                                th:selected="${s} == *{style}">
+                            Design style
+                        </option>
+                    </select>
+                    <p class="invalid-feedback errors alert alert-danger">
+                        Please add the design style.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6 mb-3">
+                    <label for="minPrice" class="text-white font-weight-bold">Minimum Price</label>
+                    <input
+                            th:field="*{minPrice}"
+                            th:errorclass="is-invalid"
+                            class="form-control"
+                            type="number"
+                            placeholder="Min price..."
+                            aria-label="Search"
+                            id="minPrice"
+                    />
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label for="maxPrice" class="text-white font-weight-bold">Maximum Price</label>
+                    <input
+                            th:field="*{maxPrice}"
+                            th:errorclass="is-invalid"
+                            class="form-control"
+                            type="number"
+                            placeholder="Max price..."
+                            aria-label="Search"
+                            id="maxPrice"
+                    />
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <small
+                            id="searchOfferHelpInline"
+                            class="bg-danger text-light rounded invalid-feedback"
+                            style="width: 97%; position: absolute; padding: 3px 15px; text-align: center;"
+                    >
+                        Try writing something this time.
+                    </small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6 mb-3">
+                    <label for="minDate" class="text-white font-weight-bold">Start date</label>
+                    <input
+                            th:field="*{minDate}"
+                            th:errorclass="is-invalid"
+                            class="form-control"
+                            type="date"
+                            placeholder="Min price..."
+                            aria-label="Search"
+                            id="minDate"
+                    />
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label for="maxDate" class="text-white font-weight-bold">End Date</label>
+                    <input
+                            th:field="*{maxDate}"
+                            th:errorclass="is-invalid"
+                            class="form-control"
+                            type="date"
+                            placeholder="Max price..."
+                            aria-label="Search"
+                            id="maxDate"
+                    />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col col-md-4">
+                    <div class="button-holder d-flex">
+                        <input type="submit" class="btn btn-info btn-lg" value="Search"/>
+                    </div>
+                </div>
+            </div>
+
+            <!--            <div class="row">-->
+            <!--                <div class="col col-md-4">-->
+            <!--                    <div class="button-holder d-flex">-->
+            <!--                        <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+        </div>
+    </form>
+</div>
+
+<div class="offers row mx-auto d-flex flex-row justify-content-center" style="margin-top: 40px;">
+
+    <div th:each="design: ${designs}" class="offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0">
+        <div class="card-img-top-wrapper">
+            <img class="card-img-top" th:src="${design.imageUrl}" alt="Car image">
+        </div>
+        <div class="card-body pb-1">
+            <h5 class="card-title" th:text="${design.getDesignHighlight}"></h5>
+        </div>
+        <li class="list-group-item">
+            <div class="card-text"><span>• Room:  <th:block th:text="${design.roomType}"></th:block></span></div>
+            <div class="card-text"><span>• Style:  <th:block th:text="${design.style}"></th:block> </span></div>
+            <div class="card-text"><span>• Date:  <th:block th:text="${design.date}"></th:block> </span></div>
+            <div class="card-text"><span>• Price:  <th:block th:text="${design.price}"></th:block></span></div>
+        </li>
+        <div class="card-body">
+            <!--            <a class="card-link" href="#" th:href="@{/designs/{designId}(designId=*{id})}">Details</a>-->
+            <a class="card-link" href="#" th:href="@{/designs/{designId}(designId=*{design.id})}">Details</a>
+        </div>
+    </div>
+    <h2 th:if="${designs != null && designs.size == 0}" class="text-info">There are no designs with the selected
+        criteria yet</h2>
+</div>
+
+<div>
+    <footer></footer>
+</div>
+
+</body>
+</html>

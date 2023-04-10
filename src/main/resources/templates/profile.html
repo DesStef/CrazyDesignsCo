@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Crazy Designs Co</title>
+    <link rel="stylesheet" href="/css/reset-css.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <script src="/js/jquery-3.5.1.slim.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<div th:replace="fragments/navbar">Navbar</div>
+
+<div class="container">
+    <h2 class="text-center mt-5 pb-1">My Profile</h2>
+    <form th:object="${user}" class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
+        <div class="row">
+            <div class="form-group col-md-6 mb-3">
+                <label for="firstName" class="text-white font-weight-bold">First Name</label>
+                <div id="firstName"
+                     th:text="*{firstName}"
+                     class="form-control"
+                     type="text"></div>
+            </div>
+            <div class="form-group col-md-6 mb-3">
+                <label for="lastName" class="text-white font-weight-bold">Last Name</label>
+                <div id="lastName"
+                     th:text="*{lastName}"
+                     class="form-control"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-12 mb-3">
+                <label for="email" class="text-white font-weight-bold">Email</label>
+                <div id="email"
+                     th:text="*{email}"
+                     class="form-control"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col col-md-6 mb-3">
+                <div class="button-holder d-flex">
+                    <a th:href="@{/profile/me/edit}" class="btn btn-info btn-lg">Edit profile</a>
+                    <!--                    <input type="submit" class="btn btn-info btn-lg" th:href="@{/profile/edit}" value="Edit profile"/>-->
+                </div>
+            </div>
+<!--            <div class="col col-md-4">-->
+<!--                <div class="button-holder d-flex">-->
+<!--                    <form-->
+<!--                            th:action="@{/profile/{id}(id=*{id})}"-->
+<!--                            th:method="delete"-->
+<!--                    ></form>-->
+<!--                        <input type="submit" class="btn btn-info btn-lg" value="Delete profile"/>-->
+<!--                </div>-->
+<!--            </div>-->
+
+        </div>
+    </form>
+</div>
+
+<div class="container-fluid">
+        <form th:if="${profile}">
+            <h2 class="text-center text-danger">Yay! You have successfully updated your profile details.</h2>
+        </form>
+</div>
+
+<div>
+    <footer></footer>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Crazy Designs Co</title>
+    <link rel="stylesheet" href="/css/reset-css.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <script src="/js/jquery-3.5.1.slim.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<div th:replace="fragments/navbar">Navbar</div>
+
+
+<div class="container-fluid">
+    <div class="container" th:if="${count}">
+        <div class="align-content-center">
+            <h2 class="text-center text-dark font-weight-bold">
+                You have not added your designs yet.
+            </h2>
+        </div>
+        <div class="align-content-center">
+            <h2 class="text-center text-dark font-weight-bold">
+                Please follow the link to change that: <a th:href="@{/designs/add}">Add design</a>.
+            </h2>
+        </div>
+        <div class="align-content-center">
+            <h2 class="text-center text-dark font-weight-bold">
+                Thank you!
+            </h2>
+        </div>
+        <div class="align-content-center"></div>
+        <div class="text-center">
+            <img alt="more picture" th:src="@{/images/together_place.png}">
+        </div>
+    </div>
+    <h2 th:unless="${count}" class="text-center mt-5 pb-1">My Designs</h2>
+    <div class="offers row mx-auto d-flex flex-row justify-content-center" style="margin-top: 40px;">
+        <div th:each="design : ${designs.getContent()}"
+             th:object="${design}"
+             class="offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0">
+            <!--             class="offers row mx-auto d-flex flex-row justify-content-center">-->
+            <!--            <div class="offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0">-->
+            <div class="card-img-top-wrapper">
+                <img class="card-img-top" th:src="*{imageUrl}" alt="Design image">
+            </div>
+            <div class="card-body pb-1">
+                <h5 class="card-title">
+                    <th:block th:text="*{designHighlight}"></th:block>
+                </h5>
+            </div>
+            <ul class="offer-details list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="card-text"><span class="card-text font-weight-bold">• Room: </span>
+                        <span class="card-text font-weight-normal" th:text="*{roomType}"></span></div>
+                    <div class="card-text"><span class="card-text font-weight-bold">• Style: </span>
+                        <span class="card-text font-weight-normal" th:text="*{style}"></span></div>
+                    <div class="card-text"><span class="card-text font-weight-bold">• Date: </span>
+                        <span class="card-text font-weight-normal" th:text="*{date}"></span></div>
+                    <div class="card-text"><span class="card-text font-weight-bold">• Price: </span>
+                        <span class="card-text font-weight-normal" th:text="*{price}"></span></div>
+                    <!--                    <div class="card-text"><span>• Room:  <th:block th:text="*{roomType}"></th:block></span></div>-->
+                    <!--                    <div class="card-text"><span>• Style:  <th:block th:text="*{style}"></th:block> </span></div>-->
+                    <!--                    <div class="card-text"><span>• Date:  <th:block th:text="*{date}"></th:block> </span></div>-->
+                    <!--                    <div class="card-text"><span>• Price:  <th:block th:text="*{price}"></th:block></span></div>-->
+                </li>
+            </ul>
+            <div class="card-body">
+                <a class="card-img font-weight-bold" th:href="@{/designs/{designId}(designId=*{id})}">Details</a>
+            </div>
+        </div>
+        <!--        </div>-->
+    </div>
+</div>
+
+<div th:unless="${count}" class="container-fluid container-fluid row justify-content-center">
+    <nav>
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${designs.isFirst()} ? 'disabled' : ''">
+                <a th:unless="${designs.isFirst()}"
+                   th:href="@{/designs/my(size=${designs.getSize()},page=0)}"
+                   class="page-link" href="#">First</a>
+                <a th:if="${designs.isFirst()}"
+                   class="page-link" href="#">First</a>
+            </li>
+        </ul>
+    </nav>
+    <nav>
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${designs.hasPrevious() ? '' : 'disabled'}">
+                <a th:if="${designs.hasPrevious()}"
+                   th:href="@{/designs/my(size=${designs.getSize()},page=${designs.getNumber() - 1})}"
+                   class="page-link" href="#">Previous</a>
+                <a th:unless="${designs.hasPrevious()}"
+                   class="page-link" href="#">Previous</a>
+            </li>
+        </ul>
+    </nav>
+    <nav>
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${designs.hasNext() ? '' : 'disabled'}">
+                <a th:if="${designs.hasNext()}"
+                   th:href="@{/designs/my(size=${designs.getSize()},page=${designs.getNumber() + 1})}"
+                   class="page-link" href="#">Next</a>
+                <a th:unless="${designs.hasNext()}"
+                   class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+    <nav>
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${designs.isLast()} ? 'disabled' : ''">
+                <a th:unless="${designs.isLast()}"
+                   th:href="@{/designs/my(size=${designs.getSize()},page=${designs.getTotalPages() - 1})}"
+                   class="page-link" href="#">Last</a>
+                <a th:if="${designs.isLast()}"
+                   class="page-link" href="#">Last</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div>
+    <footer></footer>
+</div>
+
+</body>
+</html>

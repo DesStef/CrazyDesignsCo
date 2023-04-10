@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Crazy Designs Co</title>
+    <link rel="stylesheet" href="/css/reset-css.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <script src="/js/jquery-3.5.1.slim.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<div th:replace="fragments/navbar">Navbar</div>
+
+<div class="container-fluid">
+    <h2 class="text-center mt-5 pb-1">Design details</h2>
+    <form th:action="@{/designs/add}"
+          th:method="post"
+          th:object="${addDesignModel}"
+          class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
+        <div class="form-group">
+            <label for="title" class="text-white font-weight-bold">Title</label>
+            <input
+                    id="title" required
+                    th:field="*{title}"
+                    th:errorclass="is-invalid"
+                    type="text"
+                    class="form-control"
+                    placeholder="Design title"
+            />
+            <p class="invalid-feedback errors alert alert-danger">
+                Please provide title for the design.
+            </p>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6 mb-3">
+                <!--                <label class="text-center text-white font-weight-bold" for="roomId">Room type</label>-->
+                <!--                <select id="roomId"-->
+                <!--                        name="roomId"-->
+                <!--                        th:errorclass="is-invalid"-->
+                <!--                        class="form-control">-->
+                <!--                    <option value="">- Select room type -</option>-->
+                <!--                    <option th:each="room : ${rooms}"-->
+                <!--                            th:text="${room.roomType}"-->
+                <!--                            th:value="${room.id}"-->
+                <!--                            th:selected="*{roomId} == ${room.id}">-->
+                <!--                        Design style-->
+                <!--                    </option>-->
+                <!--                </select>-->
+                <label class="text-center text-white font-weight-bold" for="roomType">Room type</label>
+                <select id="roomType" required
+                        name="roomType"
+                        th:errorclass="is-invalid"
+                        class="form-control">
+                    <option value="">- Select room type -</option>
+                    <option th:each="r : ${T(bg.finalexam.crazydesignsco.model.enums.RoomTypeEnum).values()}"
+                            th:text="${r}"
+                            th:value="${r}"
+                            th:selected="${r} == *{roomType}">
+                        Design style
+                    </option>
+                </select>
+                <p class="invalid-feedback errors alert alert-danger">
+                    Please enter one of the following room types.
+                </p>
+            </div>
+            <div class="form-group col-md-6 mb-3">
+                <label class="text-center text-white font-weight-bold" for="style">Design Style</label>
+                <select id="style" required
+                        name="style"
+                        th:errorclass="is-invalid"
+                        class="form-control">
+                    <option value="">- Select style -</option>
+                    <option th:each="s : ${T(bg.finalexam.crazydesignsco.model.enums.StyleEnum).values()}"
+                            th:text="${s}"
+                            th:value="${s}"
+                            th:selected="${s} == *{style}">
+                        Design style
+                    </option>
+                </select>
+                <p class="invalid-feedback errors alert alert-danger">
+                    Please add the design style.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6 mb-3">
+                <label for="price" class="text-white font-weight-bold">Square metres</label>
+                <input
+                        id="squareMetres" required
+                        th:field="*{squareMetres}"
+                        th:errorclass="is-invalid"
+                        type="number"
+                        class="form-control"
+                        placeholder="Room area in m2"
+                />
+                <p class="invalid-feedback errors alert alert-danger">
+                    Please add the area of the room.
+                </p>
+            </div>
+            <div class="form-group col-md-6 mb-3">
+                <label for="price" class="text-white font-weight-bold">Price</label>
+                <input
+                        id="price" required
+                        th:field="*{price}"
+                        th:errorclass="is-invalid"
+                        type="number"
+                        class="form-control"
+                        placeholder="Total price for the design"
+                />
+                <p class="invalid-feedback errors alert alert-danger">
+                    Please add the price of the design.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="text-white font-weight-bold" for="description">Description</label>
+            <textarea
+                    id="description" required
+                    th:field="*{description}"
+                    th:errorclass="is-invalid"
+                    type="textarea"
+                    class="form-control"
+                    rows="3"
+                    placeholder="Description"
+            >
+            </textarea>
+            <p class="invalid-feedback errors alert alert-danger">
+                Please add description.
+            </p>
+        </div>
+        <div class="form-group">
+            <div>
+                <label class="text-white font-weight-bold font-italic" for="imageUrl">Please add up to 3 image urls for the design:
+                    preferably one main and detailed plan, plus one view from another angle.</label>
+            </div>
+            <label class="text-white font-weight-bold" for="imageUrl">Image URL 1:</label>
+            <input
+                    id="imageUrl" required
+                    th:field="*{imageUrl}"
+                    th:errorclass="is-invalid"
+                    type="url"
+                    class="form-control"
+                    placeholder="Place the design image URL 1 here"
+            />
+            <p class="invalid-feedback errors alert alert-danger">
+                Design image URL 1 should be provided.
+            </p>
+        </div>
+        <div class="form-group">
+            <label class="text-white font-weight-bold" for="imageUrl">Image URL 2:</label>
+            <input
+                    id="imageUrl2"
+                    th:field="*{imageUrl2}"
+                    th:errorclass="is-invalid"
+                    type="url"
+                    class="form-control"
+                    placeholder="Place the design image URL 2 here"
+            />
+            <p class="invalid-feedback errors alert alert-danger">
+                Design image URL 2 should be provided..
+            </p>
+        </div>
+        <div class="form-group">
+            <label class="text-white font-weight-bold" for="imageUrl">Image URL 3:</label>
+            <input
+                    id="imageUrl3"
+                    th:field="*{imageUrl3}"
+                    th:errorclass="is-invalid"
+                    type="url"
+                    class="form-control"
+                    placeholder="Place the design image URL 3 here"
+            />
+            <p class="invalid-feedback errors alert alert-danger">
+                Design image URL 3 should be provided..
+            </p>
+        </div>
+
+        <div class="row">
+            <div class="col col-md-4">
+                <div class="button-holder d-flex">
+                    <input type="submit" class="btn btn-info btn-lg" value="Submit Design"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div>
+    <footer></footer>
+</div>
+
+</body>
+</html>
