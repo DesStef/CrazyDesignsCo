@@ -1,6 +1,6 @@
 package bg.finalexam.crazydesignsco.config;
 
-import bg.finalexam.crazydesignsco.service.DesignService;
+import bg.finalexam.crazydesignsco.service.impl.DesignServiceImpl;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -9,15 +9,15 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class DesignCoMethodSecurityConfig extends GlobalMethodSecurityConfiguration {
-    private final DesignService designService;
+    private final DesignServiceImpl designServiceImpl;
 
-    public DesignCoMethodSecurityConfig(DesignService designService) {
-        this.designService = designService;
+    public DesignCoMethodSecurityConfig(DesignServiceImpl designServiceImpl) {
+        this.designServiceImpl = designServiceImpl;
     }
 
     @Override
     protected MethodSecurityExpressionHandler createExpressionHandler() {
-        return new DesignCoSecurityExpressionHandler(designService);
+        return new DesignCoSecurityExpressionHandler(designServiceImpl);
     }
 
 }

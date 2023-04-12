@@ -1,4 +1,4 @@
-package bg.finalexam.crazydesignsco.service;
+package bg.finalexam.crazydesignsco.service.impl;
 
 import bg.finalexam.crazydesignsco.model.entity.UserEntity;
 import bg.finalexam.crazydesignsco.model.entity.UserRoleEntity;
@@ -9,12 +9,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
-public class DesignCoUserDetailsService implements UserDetailsService {
+@Component
+public class DesignCoUserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public DesignCoUserDetailsService(UserRepository userRepository) {
+    public DesignCoUserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

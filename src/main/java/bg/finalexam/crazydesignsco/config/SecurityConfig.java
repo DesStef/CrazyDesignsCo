@@ -1,9 +1,8 @@
 package bg.finalexam.crazydesignsco.config;
 
-import bg.finalexam.crazydesignsco.model.user.DesignCoUserDetails;
 import bg.finalexam.crazydesignsco.repository.UserRepository;
-import bg.finalexam.crazydesignsco.service.DesignCoUserDetailsService;
-import bg.finalexam.crazydesignsco.service.OAuthSuccessHandler;
+import bg.finalexam.crazydesignsco.service.impl.DesignCoUserDetailsServiceImpl;
+import bg.finalexam.crazydesignsco.service.impl.OAuthSuccessHandlerImpl;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +25,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
-                                           OAuthSuccessHandler oAuthSuccessHandler) throws Exception {
+                                           OAuthSuccessHandlerImpl oAuthSuccessHandlerImpl) throws Exception {
 
         http.
                 // define which requests are allowed and which not
@@ -69,7 +68,7 @@ public class SecurityConfig {
                 // allow oauth login
                         oauth2Login().
                 loginPage("/users/login").
-                successHandler(oAuthSuccessHandler);
+                successHandler(oAuthSuccessHandlerImpl);
 
 
         return http.build();
@@ -78,6 +77,6 @@ public class SecurityConfig {
     @Primary
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return new DesignCoUserDetailsService(userRepository);
+        return new DesignCoUserDetailsServiceImpl(userRepository);
     }
 }

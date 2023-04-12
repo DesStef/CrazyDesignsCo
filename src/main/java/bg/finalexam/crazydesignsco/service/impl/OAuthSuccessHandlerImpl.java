@@ -1,4 +1,4 @@
-package bg.finalexam.crazydesignsco.service;
+package bg.finalexam.crazydesignsco.service.impl;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+public class OAuthSuccessHandlerImpl extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    private UserService userService;
-    public OAuthSuccessHandler(UserService userService) {
-        this.userService = userService;
+    private UserServiceImpl userServiceImpl;
+    public OAuthSuccessHandlerImpl(UserServiceImpl userServiceImpl) {
+        this.userServiceImpl = userServiceImpl;
         setDefaultTargetUrl("/");
     }
 
@@ -31,8 +31,8 @@ public class OAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
                     getAttribute("email").
                     toString();
 
-            userService.createUserIfNotExist(userEmail);
-            userService.login(userEmail);
+            userServiceImpl.createUserIfNotExist(userEmail);
+            userServiceImpl.login(userEmail);
         }
 
         super.onAuthenticationSuccess(request, response, authentication);

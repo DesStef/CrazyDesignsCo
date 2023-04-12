@@ -1,7 +1,7 @@
 package bg.finalexam.crazydesignsco.web;
 
 import bg.finalexam.crazydesignsco.model.dto.user.UserRegisterDTO;
-import bg.finalexam.crazydesignsco.service.UserService;
+import bg.finalexam.crazydesignsco.service.impl.UserServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,12 +17,12 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/users")
 public class UserRegistrationController {
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
     private final LocaleResolver localeResolver;
 
-    public UserRegistrationController(UserService userService,
+    public UserRegistrationController(UserServiceImpl userServiceImpl,
                                       LocaleResolver localeResolver) {
-        this.userService = userService;
+        this.userServiceImpl = userServiceImpl;
         this.localeResolver = localeResolver;
     }
 
@@ -49,7 +49,7 @@ public class UserRegistrationController {
             return "redirect:/users/register";
         }
 
-        this.userService.registerAndLogin(
+        this.userServiceImpl.registerAndLogin(
                 userModel,
                 localeResolver.resolveLocale(request));
 

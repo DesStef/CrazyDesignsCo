@@ -4,8 +4,7 @@ import bg.finalexam.crazydesignsco.exception.ObjectNotFoundException;
 import bg.finalexam.crazydesignsco.model.dto.design.*;
 import bg.finalexam.crazydesignsco.model.user.DesignCoUserDetails;
 import bg.finalexam.crazydesignsco.model.view.DesignsHighlightViewModel;
-import bg.finalexam.crazydesignsco.service.DesignService;
-import bg.finalexam.crazydesignsco.service.RoomService;
+import bg.finalexam.crazydesignsco.service.impl.DesignServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,10 +27,10 @@ import java.util.UUID;
 @Controller
 public class DesignController {
 
-    private final DesignService designService;
+    private final DesignServiceImpl designServiceImpl;
 
-    public DesignController(DesignService designService) {
-        this.designService = designService;
+    public DesignController(DesignServiceImpl designServiceImpl) {
+        this.designServiceImpl = designServiceImpl;
     }
 
     @GetMapping("/designs/all")
@@ -43,7 +42,7 @@ public class DesignController {
                     page = 0,
                     size = 5) Pageable pageable) {
 
-        Page<DesignsHighlightViewModel> allDesigns = designService.getAllDesigns(pageable);
+        Page<DesignsHighlightViewModel> allDesigns = designServiceImpl.getAllDesigns(pageable);
 
         model.addAttribute("designs", allDesigns);
 
@@ -60,7 +59,7 @@ public class DesignController {
                     size = 5) Pageable pageable,
             @AuthenticationPrincipal DesignCoUserDetails userDetails) {
 
-        Page<DesignsHighlightViewModel> allDesigns = designService.getAllDesignsByUser(pageable, userDetails);
+        Page<DesignsHighlightViewModel> allDesigns = designServiceImpl.getAllDesignsByUser(pageable, userDetails);
         long count = allDesigns.stream().count();
 
         if (count == 0) {
@@ -81,7 +80,7 @@ public class DesignController {
                     page = 0,
                     size = 5) Pageable pageable) {
 
-        Page<DesignsHighlightViewModel> allDesigns = designService.getAllDesignsByRoomTypeOther(pageable);
+        Page<DesignsHighlightViewModel> allDesigns = designServiceImpl.getAllDesignsByRoomTypeOther(pageable);
         long count = allDesigns.stream().count();
 
         if (count == 0) {
@@ -102,7 +101,7 @@ public class DesignController {
                     page = 0,
                     size = 5) Pageable pageable) {
 
-        Page<DesignsHighlightViewModel> allDesigns = designService.getAllDesignsByStyleOther(pageable);
+        Page<DesignsHighlightViewModel> allDesigns = designServiceImpl.getAllDesignsByStyleOther(pageable);
         long count = allDesigns.stream().count();
 
         if (count == 0) {
@@ -138,7 +137,7 @@ public class DesignController {
             return "redirect:/designs/add";
         }
 
-        designService.addDesign(createDesignDTO, userDetails);
+        designServiceImpl.addDesign(createDesignDTO, userDetails);
 
         return "redirect:/designs/all";
     }
@@ -161,7 +160,7 @@ public class DesignController {
         }
 
         if (!searchDesignDTO.isEmpty()) {
-            model.addAttribute("designs", designService.searchDesign(searchDesignDTO));
+            model.addAttribute("designs", designServiceImpl.searchDesign(searchDesignDTO));
         }
 
         return "design-search";
@@ -171,7 +170,7 @@ public class DesignController {
     @GetMapping("/designs/{id}/edit")
     public String edit(@PathVariable("id") UUID uuid,
                        Model model) {
-        var updateDesignDTO = designService.getDesignAndEditDetails(uuid);
+        var updateDesignDTO = designServiceImpl.getDesignAndEditDetails(uuid);
 //                orElseThrow(() -> new ObjectNotFoundException("Design with ID "+ uuid + "not found"));
 
         model.addAttribute("editDesign", updateDesignDTO);
@@ -195,7 +194,7 @@ public class DesignController {
             return "redirect:/designs/{id}/edit";
         }
 
-        designService.editDesign(uuid, updateDesignDTO, userDetails);
+        designServiceImpl.editDesign(uuid, updateDesignDTO, userDetails);
         redirectAttributes.addFlashAttribute("designUpdated", true);
 
 //        return "redirect:/designs/all";
@@ -207,7 +206,7 @@ public class DesignController {
     @DeleteMapping("/designs/{id}")
     public String deleteOffer(
             @PathVariable("id") UUID uuid) {
-        designService.deleteDesignById(uuid);
+        designServiceImpl.deleteDesignById(uuid);
 
         return "redirect:/designs/all";
     }
@@ -217,11 +216,11 @@ public class DesignController {
                                   Model model, Principal principal) {
 
         var designDto =
-                designService.findDesignByUUID(uuid).
+                designServiceImpl.findDesignByUUID(uuid).
                         orElseThrow(() -> new ObjectNotFoundException("Design with UUID " +
                                 uuid + " not found!"));
 
-        if (designService.isOwner(principal.getName(), designDto.getId())) {
+        if (designServiceImpl.isOwner(principal.getName(), designDto.getId())) {
             model.addAttribute("isOwner", true);
         }
 

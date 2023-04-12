@@ -2,12 +2,10 @@ package bg.finalexam.crazydesignsco.web;
 
 import bg.finalexam.crazydesignsco.exception.ObjectNotFoundException;
 import bg.finalexam.crazydesignsco.model.dto.user.MyProfileUpdateDTO;
-import bg.finalexam.crazydesignsco.model.dto.user.UserUpdateDTO;
 import bg.finalexam.crazydesignsco.model.mapper.UserMapper;
 import bg.finalexam.crazydesignsco.model.service.MyProfileServiceModel;
-import bg.finalexam.crazydesignsco.model.service.UserServiceModel;
-import bg.finalexam.crazydesignsco.service.DesignService;
-import bg.finalexam.crazydesignsco.service.UserService;
+import bg.finalexam.crazydesignsco.service.impl.DesignServiceImpl;
+import bg.finalexam.crazydesignsco.service.impl.UserServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,14 +20,14 @@ import java.util.ArrayList;
 @Controller
 public class ProfileController {
 
-    private final UserService userService;
-    private final DesignService designService;
+    private final UserServiceImpl userServiceImpl;
+    private final DesignServiceImpl designServiceImpl;
     private final UserMapper userMapper;
 
 
-    public ProfileController(UserService userService, DesignService designService, UserMapper userMapper) {
-        this.userService = userService;
-        this.designService = designService;
+    public ProfileController(UserServiceImpl userServiceImpl, DesignServiceImpl designServiceImpl, UserMapper userMapper) {
+        this.userServiceImpl = userServiceImpl;
+        this.designServiceImpl = designServiceImpl;
         this.userMapper = userMapper;
     }
 
@@ -37,10 +35,10 @@ public class ProfileController {
     public String getUserDetail(Principal principal,
                                 Model model) {
 
-        Long id = userService.findByEmail(principal.getName()).getId();
+        Long id = userServiceImpl.findByEmail(principal.getName()).getId();
 
         var userDto =
-                userService.findUserById(id).
+                userServiceImpl.findUserById(id).
                         orElseThrow(() -> new ObjectNotFoundException("User with ID " +
                                 id + " not found!"));
 
@@ -53,9 +51,9 @@ public class ProfileController {
     public String editMyProfile(Principal principal,
                                    Model model) {
 
-        Long id = userService.findByEmail(principal.getName()).getId();
+        Long id = userServiceImpl.findByEmail(principal.getName()).getId();
 
-        MyProfileServiceModel myProfileServiceModel = userService.findUserByIdReturnMyProfileModel(id).
+        MyProfileServiceModel myProfileServiceModel = userServiceImpl.findUserByIdReturnMyProfileModel(id).
                         orElseThrow(() -> new ObjectNotFoundException("User with ID " +
                                 id + " not found!"));
 
@@ -72,17 +70,17 @@ public class ProfileController {
                        BindingResult bindingResult,
                        RedirectAttributes redirectAttributes) {
 
-        Long id = userService.findByEmail(principal.getName()).getId();
+        Long id = userServiceImpl.findByEmail(principal.getName()).getId();
 
         if (bindingResult.hasErrors() ||
-                userService.existingEmailExceptId(myProfileUpdateDTO.getEmail(), id) != null) {
+                userServiceImpl.existingEmailExceptId(myProfileUpdateDTO.getEmail(), id) != null) {
             redirectAttributes.addFlashAttribute("myProfileUpdateDto", myProfileUpdateDTO);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.myProfileUpdateDto",
                     bindingResult);
 
             System.out.println(bindingResult.toString());
 
-            if (userService.existingEmailExceptId(myProfileUpdateDTO.getEmail(), id) != null) {
+            if (userServiceImpl.existingEmailExceptId(myProfileUpdateDTO.getEmail(), id) != null) {
                 redirectAttributes.addFlashAttribute("emailFound", true);
             }
 
@@ -96,7 +94,7 @@ public class ProfileController {
 
         MyProfileServiceModel myProfileServiceModel = userMapper.myProfileUpdateDtoToMyProfileServiceModel(myProfileUpdateDTO);
 //        MyProfileServiceModel myProfileServiceModel = userMapper.userUpdateDtoToUserServiceModel(myProfileUpdateDTO);
-        userService.editMyProfile(id, myProfileServiceModel);
+        userServiceImpl.editMyProfile(id, myProfileServiceModel);
 
         redirectAttributes.addFlashAttribute("profile", true);
 
