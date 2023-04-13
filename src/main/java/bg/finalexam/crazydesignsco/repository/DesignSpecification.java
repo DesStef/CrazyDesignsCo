@@ -34,13 +34,13 @@ public class DesignSpecification implements Specification<DesignEntity> {
 
         if (searchDesignDTO.getMinPrice() != null) {
             p.getExpressions().add(
-                    cb.and(cb.greaterThanOrEqualTo(root.get("date"), searchDesignDTO.getMinPrice()))
+                    cb.and(cb.greaterThanOrEqualTo(root.get("price"), searchDesignDTO.getMinPrice()))
             );
         }
 
         if (searchDesignDTO.getMaxPrice() != null) {
             p.getExpressions().add(
-                    cb.and(cb.lessThanOrEqualTo(root.get("date"), searchDesignDTO.getMaxPrice()))
+                    cb.and(cb.lessThanOrEqualTo(root.get("price"), searchDesignDTO.getMaxPrice()))
             );
         }
 

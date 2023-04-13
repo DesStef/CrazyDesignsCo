@@ -1,6 +1,6 @@
 package bg.finalexam.crazydesignsco.config;
 
-import bg.finalexam.crazydesignsco.service.impl.DesignServiceImpl;
+import bg.finalexam.crazydesignsco.service.DesignService;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
 import org.springframework.security.core.Authentication;
@@ -12,15 +12,15 @@ public class OwnerSecurityExpressionRoot
         implements MethodSecurityExpressionOperations {
 
     private final Authentication authentication;
-    private final DesignServiceImpl designServiceImpl;
+    private final DesignService designService;
     private Object filterObject;
     private Object returnObject;
 
     public OwnerSecurityExpressionRoot(Authentication authentication,
-                                       DesignServiceImpl designServiceImpl) {
+                                       DesignService designService) {
         super(authentication);
         this.authentication = authentication;
-        this.designServiceImpl = designServiceImpl;
+        this.designService = designService;
     }
 
     public boolean isOwner(UUID id) {
@@ -30,7 +30,7 @@ public class OwnerSecurityExpressionRoot
 
         var userName = authentication.getName();
 
-        return designServiceImpl.isOwner(userName, id);
+        return designService.isOwner(userName, id);
     }
 
     @Override

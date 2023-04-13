@@ -1,6 +1,6 @@
 package bg.finalexam.crazydesignsco.config;
 
-import bg.finalexam.crazydesignsco.service.impl.MaintenanceInterceptorImpl;
+import bg.finalexam.crazydesignsco.service.impl.MaintenanceInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -11,16 +11,16 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final LocaleChangeInterceptor localeChangeInterceptor;
 
-    private final MaintenanceInterceptorImpl maintenanceInterceptorImpl;
+    private final MaintenanceInterceptor maintenanceInterceptor;
 
-    public WebConfig(LocaleChangeInterceptor localeChangeInterceptor, MaintenanceInterceptorImpl maintenanceInterceptorImpl) {
+    public WebConfig(LocaleChangeInterceptor localeChangeInterceptor, MaintenanceInterceptor maintenanceInterceptor) {
         this.localeChangeInterceptor = localeChangeInterceptor;
-        this.maintenanceInterceptorImpl = maintenanceInterceptorImpl;
+        this.maintenanceInterceptor = maintenanceInterceptor;
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor);
-        registry.addInterceptor(maintenanceInterceptorImpl);
+        registry.addInterceptor(maintenanceInterceptor);
     }
 }

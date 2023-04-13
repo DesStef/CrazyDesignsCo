@@ -14,12 +14,15 @@ import bg.finalexam.crazydesignsco.model.view.DesignDetailsViewModel;
 import bg.finalexam.crazydesignsco.model.view.DesignsHighlightViewModel;
 import bg.finalexam.crazydesignsco.repository.*;
 import bg.finalexam.crazydesignsco.service.DesignService;
+import bg.finalexam.crazydesignsco.service.PictureService;
+import bg.finalexam.crazydesignsco.service.RoomService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,16 +33,16 @@ public class DesignServiceImpl implements DesignService {
     private final DesignRepository designRepository;
     private final UserRepository userRepository;
     private final DesignMapper designMapper;
-    private final RoomServiceImpl roomServiceImpl;
-    private final PictureServiceImpl pictureServiceImpl;
+    private final RoomService roomService;
+    private final PictureService pictureService;
 
     public DesignServiceImpl(DesignRepository designRepository, UserRepository userRepository,
-                             DesignMapper designMapper, RoomServiceImpl roomServiceImpl, PictureServiceImpl pictureServiceImpl) {
+                             DesignMapper designMapper, RoomService roomService, PictureService pictureService) {
         this.designRepository = designRepository;
         this.userRepository = userRepository;
         this.designMapper = designMapper;
-        this.roomServiceImpl = roomServiceImpl;
-        this.pictureServiceImpl = pictureServiceImpl;
+        this.roomService = roomService;
+        this.pictureService = pictureService;
     }
 
     @Override
@@ -68,12 +71,6 @@ public class DesignServiceImpl implements DesignService {
 
     @Override
     public void deleteDesignById(UUID designId) {
-        DesignEntity designToDelete =
-                designRepository.findById(designId).orElseThrow();
-
-        Long roomIdToDelete = designToDelete.getRoom().getId();
-        roomServiceImpl.deleteRoomById(roomIdToDelete);
-
         designRepository.deleteById(designId);
     }
 
@@ -152,25 +149,6 @@ public class DesignServiceImpl implements DesignService {
         return convertToPage(collect, pageable);
     }
 
-    @Override
-    public UpdateDesignDTO getDesignAndEditDetails(UUID designId) {
-        DesignEntity design = designRepository.findById(designId).orElseThrow();
-        UpdateDesignDTO updateDesignDTO = designMapper.designEntityToUpdateDesignDto(design);
-
-        List<String> picsUrls = design.getPictures().stream().map(PictureEntity::getImageUrl).toList();
-
-        updateDesignDTO.setImageUrl(picsUrls.get(0));
-
-        if (picsUrls.size() == 2) {
-            updateDesignDTO.setImageUrl2(picsUrls.get(1));
-        }
-        if (picsUrls.size() == 3) {
-            updateDesignDTO.setImageUrl2(picsUrls.get(1));
-            updateDesignDTO.setImageUrl3(picsUrls.get(2));
-        }
-
-        return updateDesignDTO;
-    }
 
     @Override
     public Optional<DesignDetailsViewModel> findDesignByUUID(UUID designId) {
@@ -199,7 +177,7 @@ public class DesignServiceImpl implements DesignService {
         UserEntity creator = userRepository.findByEmail(userDetails.getUsername()).
                 orElseThrow();
 
-        RoomEntity newRoom = roomServiceImpl.addRoom(createDesignDTO.getRoomType(), createDesignDTO.getSquareMetres());
+        RoomEntity newRoom = roomService.addRoom(createDesignDTO.getRoomType(), createDesignDTO.getSquareMetres());
 
         designEntity.setCreator(creator);
         designEntity.setRoom(newRoom);
@@ -211,39 +189,93 @@ public class DesignServiceImpl implements DesignService {
         getPictureUrlsAndSavePictureEntities(allImageUrls, designEntity);
     }
 
+    @Override
+    public List<DesignsHighlightViewModel> searchDesign(SearchDesignDTO searchDesignDTO) {
+        List<DesignDetailsDTO> designDetailsDTOS = this.designRepository.findAll(new DesignSpecification(searchDesignDTO)).
+                stream().map(design -> new DesignDetailsDTO(
+                        design.getId(),
+                        design.getTitle(),
+                        design.getRoom().getRoomType(),
+                        design.getRoom().getSquareMetres(),
+                        design.getPictures().stream().map(PictureEntity::getImageUrl).collect(Collectors.toList()),
+                        design.getPrice(),
+                        design.getDescription(),
+                        design.getStyle(),
+                        design.getDate(),
+                        design.getCreator().getFirstName(),
+                        design.getCreator().getLastName(),
+                        design.getCreator().getId())).toList();
+
+        return designDetailsDTOS.stream().map(design -> new DesignsHighlightViewModel(
+                design.getId(),
+                design.getTitle(),
+                design.getRoomType(),
+                design.getSquareMetres(),
+                design.getImageUrls().stream().findFirst().get(),
+                design.getPrice(),
+                design.getStyle(),
+                design.getDate(),
+                design.getCreatorId())).toList();
+    }
+
     private void getPictureUrlsAndSavePictureEntities(List<String> picUrls, DesignEntity designEntity) {
         Set<PictureEntity> pictures = new HashSet<>();
 
         for (int i = 0; i < picUrls.size(); i++) {
-            PictureEntity pictureEntity = pictureServiceImpl.addPicture(picUrls.get(i), designEntity);
-            pictures.add(pictureEntity);
+            if (picUrls.get(i) != null && !picUrls.get(i).isEmpty()) {
+                PictureEntity pictureEntity = pictureService.addPicture(picUrls.get(i), designEntity);
+                pictures.add(pictureEntity);
+            }
         }
 
         designEntity.setPictures(pictures);
     }
 
-    //    TODO: make with DesignHighlightvew
-    @Override
-    public List<DesignDetailsDTO> searchDesign(SearchDesignDTO searchDesignDTO) {
-        return this.designRepository.findAll(new DesignSpecification(searchDesignDTO)).
-                stream().map(designMapper::designEntityToDesignDetailDto).collect(Collectors.toList());
-    }
 
+    @Transactional
     @Override
     public void editDesign(UUID designId, UpdateDesignDTO editDesignDTO, UserDetails userDetails) {
         DesignEntity designFromRepo = designRepository.getReferenceById(designId);
         designFromRepo.setDate(LocalDate.now());
 
         designMapper.updateDesignFromUpdateDesignDto(editDesignDTO, designFromRepo);
-        designRepository.save(designFromRepo);
 
-        Set<PictureEntity> fromRepoPictures = designFromRepo.getPictures();
-        for (PictureEntity pictureEntity : fromRepoPictures) {
-            pictureServiceImpl.deletePicture(pictureEntity.getId());
-        }
+        pictureService.deletePicturesByDesign(designFromRepo);
+
+
+//        Set<PictureEntity> fromRepoPictures = designFromRepo.getPictures();
+//        for (PictureEntity pictureEntity : fromRepoPictures) {
+//            System.out.println("pic deleted" + pictureEntity);
+//
+//            pictureService.deletePicture(pictureEntity.getId());
+//        }
+
+//        pictureService.deletePicturesByDesign(designFromRepo);
 
         List<String> allImageUrls = editDesignDTO.getAllImageUrls();
         getPictureUrlsAndSavePictureEntities(allImageUrls, designFromRepo);
+
+        designRepository.save(designFromRepo);
+    }
+
+    @Override
+    public UpdateDesignDTO getDesignAndEditDetails(UUID designId) {
+        DesignEntity design = designRepository.findById(designId).orElseThrow();
+        UpdateDesignDTO updateDesignDTO = designMapper.designEntityToUpdateDesignDto(design);
+
+        List<String> picsUrls = design.getPictures().stream().map(PictureEntity::getImageUrl).toList();
+
+        updateDesignDTO.setImageUrl(picsUrls.get(0));
+
+        if (picsUrls.size() == 2) {
+            updateDesignDTO.setImageUrl2(picsUrls.get(1));
+        }
+        if (picsUrls.size() == 3) {
+            updateDesignDTO.setImageUrl2(picsUrls.get(1));
+            updateDesignDTO.setImageUrl3(picsUrls.get(2));
+        }
+
+        return updateDesignDTO;
     }
 
     @Override

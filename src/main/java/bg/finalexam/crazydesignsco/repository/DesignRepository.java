@@ -25,6 +25,7 @@ public interface DesignRepository extends
     List<DesignEntity> findAllByCreator(UserEntity creator);
     Page<DesignEntity> findAllByRoom_RoomType(Pageable pageable, RoomTypeEnum roomTypeEnum);
     Page<DesignEntity> findAllByStyle(Pageable pageable, StyleEnum styleEnum);
+    Page<DesignEntity> findAll(Pageable pageable);
 
 
 //    Page<DesignEntity> findAll(Pageable pageable, DesignSpecification designSpecification);

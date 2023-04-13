@@ -10,10 +10,9 @@ import bg.finalexam.crazydesignsco.model.service.MyProfileServiceModel;
 import bg.finalexam.crazydesignsco.model.service.UserServiceModel;
 import bg.finalexam.crazydesignsco.repository.UserRepository;
 import bg.finalexam.crazydesignsco.repository.UserRoleRepository;
+import bg.finalexam.crazydesignsco.service.DesignService;
+import bg.finalexam.crazydesignsco.service.UserRoleService;
 import bg.finalexam.crazydesignsco.service.UserService;
-import bg.finalexam.crazydesignsco.service.impl.DesignServiceImpl;
-import bg.finalexam.crazydesignsco.service.impl.EmailServiceImpl;
-import bg.finalexam.crazydesignsco.service.impl.UserRoleServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,26 +36,26 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final UserDetailsService userDetailsService;
-    private final DesignServiceImpl designServiceImpl;
-    private final EmailServiceImpl emailServiceImpl;
+    private final DesignService designService;
+    private final EmailService emailService;
     private final UserRoleRepository userRoleRepository;
-    private final UserRoleServiceImpl userRoleServiceImpl;
+    private final UserRoleService userRoleService;
 
     public UserServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
                            UserMapper userMapper,
                            UserDetailsService userDetailsService,
-                           DesignServiceImpl designServiceImpl, EmailServiceImpl emailServiceImpl,
+                           DesignService designService, EmailService emailService,
                            UserRoleRepository userRoleRepository,
-                           UserRoleServiceImpl userRoleServiceImpl) {
+                           UserRoleService userRoleService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
         this.userDetailsService = userDetailsService;
-        this.designServiceImpl = designServiceImpl;
-        this.emailServiceImpl = emailServiceImpl;
+        this.designService = designService;
+        this.emailService = emailService;
         this.userRoleRepository = userRoleRepository;
-        this.userRoleServiceImpl = userRoleServiceImpl;
+        this.userRoleService = userRoleService;
     }
 
     @Override
@@ -91,7 +90,7 @@ public class UserServiceImpl implements UserService {
 
         this.userRepository.save(newUser);
         login(newUser.getEmail());
-        emailServiceImpl.sendRegistrationEmail(newUser.getEmail(),
+        emailService.sendRegistrationEmail(newUser.getEmail(),
                 newUser.getFirstName() + " " + newUser.getLastName(),
                 preferredLocale);
     }
@@ -165,7 +164,7 @@ public class UserServiceImpl implements UserService {
         }
         userMapper.updateUserFromUserServiceModel(userServiceModel, userFromRepo);
 
-        UserRoleEntity newUserRole = userRoleServiceImpl.findUserRole(userServiceModel.getUserRoleEnum());
+        UserRoleEntity newUserRole = userRoleService.findUserRole(userServiceModel.getUserRoleEnum());
         List<UserRoleEntity> currentUserRoles = userFromRepo.getUserRoles();
 
         if (newUserRole != null) {
@@ -186,7 +185,7 @@ public class UserServiceImpl implements UserService {
         if (user.isPresent()) {
             UserEntity userEntity = user.get();
             List<UserRoleEntity> userRoles = userEntity.getUserRoles();
-            UserRoleEntity userRole = userRoleServiceImpl.findUserRole(UserRoleEnum.valueOf(role));
+            UserRoleEntity userRole = userRoleService.findUserRole(UserRoleEnum.valueOf(role));
             if (!userRoles.contains(userRole)) {
                 userRoles.add(userRole);
             }

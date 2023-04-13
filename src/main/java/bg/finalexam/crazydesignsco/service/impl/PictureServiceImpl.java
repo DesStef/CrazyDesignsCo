@@ -5,6 +5,7 @@ import bg.finalexam.crazydesignsco.model.entity.PictureEntity;
 import bg.finalexam.crazydesignsco.repository.PictureRepository;
 import bg.finalexam.crazydesignsco.service.PictureService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PictureServiceImpl implements PictureService {
@@ -17,19 +18,25 @@ public class PictureServiceImpl implements PictureService {
 
     @Override
     public PictureEntity addPicture(String imageUrl, DesignEntity design) {
-        PictureEntity pictureEntity = new PictureEntity();
 
-        pictureEntity.setImageUrl(imageUrl);
-        pictureEntity.setDesign(design);
+        PictureEntity newPicture = new PictureEntity();
+        newPicture.setImageUrl(imageUrl);
+        newPicture.setDesign(design);
 
-        pictureRepository.save(pictureEntity);
-
-        return pictureEntity;
+        pictureRepository.save(newPicture);
+        return newPicture;
     }
 
+    @Transactional
     @Override
     public void deletePicture(Long picId) {
-        pictureRepository.deleteById(picId);
+        pictureRepository.deletePictureEntityById(picId);
+    }
+
+    @Transactional
+    @Override
+    public void deletePicturesByDesign(DesignEntity design) {
+        pictureRepository.deletePictureEntitiesByDesign(design);
     }
 
 }

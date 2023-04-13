@@ -5,7 +5,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 
 @Configuration
-public class MaintenanceInterceptorImpl implements HandlerInterceptor {
+public class MaintenanceInterceptor implements HandlerInterceptor {
 
 //    @Override
 //    public boolean preHandle(HttpServletRequest request,

@@ -5,6 +5,7 @@ import bg.finalexam.crazydesignsco.model.dto.comment.CommentMessageDTO;
 import bg.finalexam.crazydesignsco.model.dto.comment.CreateCommentDTO;
 import bg.finalexam.crazydesignsco.model.user.DesignCoUserDetails;
 import bg.finalexam.crazydesignsco.model.view.CommentViewModel;
+import bg.finalexam.crazydesignsco.service.CommentService;
 import bg.finalexam.crazydesignsco.service.impl.CommentServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,15 +18,15 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api")
 public class CommentRestController {
-    private final CommentServiceImpl commentServiceImpl;
+    private final CommentService commentService;
 
-    public CommentRestController(CommentServiceImpl commentServiceImpl) {
-        this.commentServiceImpl = commentServiceImpl;
+    public CommentRestController(CommentService commentService) {
+        this.commentService = commentService;
     }
 
     @GetMapping("/{designId}/comments")
     public ResponseEntity<List<CommentViewModel>> getComments(@PathVariable("designId") UUID designId) {
-        return ResponseEntity.ok(commentServiceImpl.getAllCommentsForDesign(designId));
+        return ResponseEntity.ok(commentService.getAllCommentsForDesign(designId));
     }
 
     @PostMapping(value = "/{designId}/comments", consumes = "application/json", produces = "application/json")
@@ -38,7 +39,7 @@ public class CommentRestController {
         createCommentDTO.setEmail(userDetails.getUsername());
         createCommentDTO.setMessage(commentMessageDTO.getMessage());
 
-        CommentViewModel comment = commentServiceImpl.createComment(createCommentDTO);
+        CommentViewModel comment = commentService.createComment(createCommentDTO);
 
         return ResponseEntity
                 .created(URI.create(String.format("/api/%s/comments/%d", designId, comment.getId())))

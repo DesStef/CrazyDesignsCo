@@ -8,4 +8,6 @@ public interface PictureService {
     PictureEntity addPicture(String imageUrl, DesignEntity design);
 
     void deletePicture(Long picId);
+
+    void deletePicturesByDesign(DesignEntity design);
 }

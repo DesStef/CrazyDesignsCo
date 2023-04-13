@@ -64,7 +64,24 @@ public class DesignDetailsDTO {
     )
     private String creatorLastName;
 
+    private Long creatorId;
+
     public DesignDetailsDTO() {
+    }
+
+    public DesignDetailsDTO(UUID id, String title, RoomTypeEnum roomType, float squareMetres, List<String> imageUrls, BigDecimal price, String description, StyleEnum style, LocalDate date, String creatorFirstName, String creatorLastName, Long creatorId) {
+        this.id = id;
+        this.title = title;
+        this.roomType = roomType;
+        this.squareMetres = squareMetres;
+        this.imageUrls = imageUrls;
+        this.price = price;
+        this.description = description;
+        this.style = style;
+        this.date = date;
+        this.creatorFirstName = creatorFirstName;
+        this.creatorLastName = creatorLastName;
+        this.creatorId = creatorId;
     }
 
     public String getTitle() {
@@ -182,5 +199,14 @@ public class DesignDetailsDTO {
 
     public String getDesignHighlight() {
         return this.title + ", "+ this.squareMetres + " m2" ;
+    }
+
+    public Long getCreatorId() {
+        return creatorId;
+    }
+
+    public DesignDetailsDTO setCreatorId(Long creatorId) {
+        this.creatorId = creatorId;
+        return this;
     }
 }

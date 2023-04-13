@@ -44,8 +44,7 @@ public interface DesignService {
 
     void addDesign(CreateDesignDTO createDesignDTO, UserDetails userDetails);
 
-    //    TODO: make with DesignHighlightvew
-    List<DesignDetailsDTO> searchDesign(SearchDesignDTO searchDesignDTO);
+    List<DesignsHighlightViewModel> searchDesign(SearchDesignDTO searchDesignDTO);
 
     void editDesign(UUID designId, UpdateDesignDTO editDesignDTO, UserDetails userDetails);
 

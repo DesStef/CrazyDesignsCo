@@ -5,10 +5,10 @@ values (1, 'ADMIN'),
        (2, 'USER');
 
 INSERT INTO users (id, email, first_name, last_name, phone, image_url, is_active, want_deletion, password)
-VALUES (1, 'admin@example.com', 'Admin', 'Adminov', '0986 20 65 30', true, false , 1,
+VALUES (1, 'admin@example.com', 'Admin', 'Adminov', '0986 20 65 30', true, false , false ,
         '57e7759fd2d59275fc3c3cd5dd2ace5013b39ee972999412f3f5f5c3382b6765c2571ef86648abe2'),
 -- pass is: topsecret
-       (2, 'user@example.com', 'User', 'Userov', '0236 25 84 21', true , false , 1,
+       (2, 'user@example.com', 'User', 'Userov', '0236 25 84 21', true , false , false ,
         '57e7759fd2d59275fc3c3cd5dd2ace5013b39ee972999412f3f5f5c3382b6765c2571ef86648abe2');
 
 

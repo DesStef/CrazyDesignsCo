@@ -26,7 +26,7 @@
             <!--        <div class="form-group" style="position: relative">-->
             <div class="row">
                 <div class="form-group col-md-6 mb-3">
-                    <label class="text-center text-white font-weight-bold" for="roomType">Style</label>
+                    <label class="text-center text-white font-weight-bold" for="roomType">Room Type</label>
                     <select id="roomType"
                             name="roomType"
                             th:errorclass="is-invalid"
@@ -36,7 +36,7 @@
                                 th:text="${r}"
                                 th:value="${r}"
                                 th:selected="${r} == *{roomType}">
-                            Design style
+                            Room Type
                         </option>
                     </select>
                     <p class="invalid-feedback errors alert alert-danger">

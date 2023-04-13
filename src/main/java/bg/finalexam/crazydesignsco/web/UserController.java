@@ -5,6 +5,8 @@ import bg.finalexam.crazydesignsco.model.dto.user.UserUpdateDTO;
 import bg.finalexam.crazydesignsco.model.enums.UserRoleEnum;
 import bg.finalexam.crazydesignsco.model.mapper.UserMapper;
 import bg.finalexam.crazydesignsco.model.service.UserServiceModel;
+import bg.finalexam.crazydesignsco.service.UserRoleService;
+import bg.finalexam.crazydesignsco.service.UserService;
 import bg.finalexam.crazydesignsco.service.impl.UserRoleServiceImpl;
 import bg.finalexam.crazydesignsco.service.impl.UserServiceImpl;
 import org.springframework.data.domain.Pageable;
@@ -23,13 +25,13 @@ import javax.validation.Valid;
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserServiceImpl userServiceImpl;
-    private final UserRoleServiceImpl userRoleServiceImpl;
+    private final UserService userService;
+    private final UserRoleService userRoleService;
     private final UserMapper userMapper;
 
-    public UserController(UserServiceImpl userServiceImpl, UserRoleServiceImpl userRoleServiceImpl, UserMapper userMapper) {
-        this.userServiceImpl = userServiceImpl;
-        this.userRoleServiceImpl = userRoleServiceImpl;
+    public UserController(UserService userService, UserRoleService userRoleService, UserMapper userMapper) {
+        this.userService = userService;
+        this.userRoleService = userRoleService;
         this.userMapper = userMapper;
     }
 
@@ -60,7 +62,7 @@ public class UserController {
                     page = 0,
                     size = 2) Pageable pageable) {
 
-        model.addAttribute("users", userServiceImpl.getAllUsers(pageable));
+        model.addAttribute("users", userService.getAllUsers(pageable));
 
         return "users";
     }
@@ -69,7 +71,7 @@ public class UserController {
     public String updateUserDetails(@PathVariable("id") Long id,
                                     Model model) {
 
-        UserServiceModel userServiceModel = userServiceImpl.findUserByIdReturnUserModel(id).
+        UserServiceModel userServiceModel = userService.findUserByIdReturnUserModel(id).
                 orElseThrow(() -> new ObjectNotFoundException("User with ID " +
                         id + " not found!"));
         System.out.println("status 1" + userServiceModel.toString());
@@ -79,7 +81,7 @@ public class UserController {
         System.out.println("status 2" + userUpdateDTO.toString());
         model.addAttribute("userUpdateDTO", userUpdateDTO);
 //        added from other
-        model.addAttribute("userRoles", userServiceImpl.findUserRolesByEmail(email).toString());
+        model.addAttribute("userRoles", userService.findUserRolesByEmail(email).toString());
 //                .addAttribute("email", email);
 
         return "profile-user";
@@ -98,13 +100,13 @@ public class UserController {
         System.out.println("Passwords: " + userUpdateDTO.getPassword() + " " + userUpdateDTO.getConfirmPassword());
 
         if (bindingResult.hasErrors() ||
-                userServiceImpl.existingEmailExceptId(userUpdateDTO.getEmail(), id) != null) {
+                userService.existingEmailExceptId(userUpdateDTO.getEmail(), id) != null) {
             redirectAttributes.addFlashAttribute("userUpdateDTO", userUpdateDTO);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userUpdateDTO",
                     bindingResult);
 
             System.out.println("test if printed: there are errors");
-            if (userServiceImpl.existingEmailExceptId(userUpdateDTO.getEmail(), id) != null) {
+            if (userService.existingEmailExceptId(userUpdateDTO.getEmail(), id) != null) {
                 redirectAttributes.addFlashAttribute("emailFound", true);
             }
 
@@ -129,7 +131,7 @@ public class UserController {
             System.out.println(userServiceModel.getUserRoleEnum());
         }
 
-        userServiceImpl.editUser(id, userServiceModel);
+        userService.editUser(id, userServiceModel);
 
         redirectAttributes.addFlashAttribute("updatedUserProfile", true)
                 .addFlashAttribute("userId", id);

@@ -26,14 +26,14 @@ public class DesignEntity {
     private String title;
 
 //    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @OneToOne()
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private RoomEntity room;
 
 //    @Column(nullable = false)
 //    private String imageUrl;
 
     @Column(nullable = false)
-    @OneToMany(mappedBy = "design", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "design", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<PictureEntity> pictures;
 
     @Column(nullable = false)
