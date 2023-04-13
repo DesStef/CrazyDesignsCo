@@ -20,8 +20,8 @@ spring:
             client:
                 registration:
                     facebook:
-                        client-id: 1246801659592411
-                        client-secret: 5388d78a090a1a0a98bd3661bfcd6c90
+                        client-id: tbp
+                        client-secret: tbp
     sql:
         init:
             mode: always
