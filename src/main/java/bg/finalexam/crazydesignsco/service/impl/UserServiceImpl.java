@@ -11,6 +11,7 @@ import bg.finalexam.crazydesignsco.model.service.UserServiceModel;
 import bg.finalexam.crazydesignsco.repository.UserRepository;
 import bg.finalexam.crazydesignsco.repository.UserRoleRepository;
 import bg.finalexam.crazydesignsco.service.DesignService;
+import bg.finalexam.crazydesignsco.service.EmailService;
 import bg.finalexam.crazydesignsco.service.UserRoleService;
 import bg.finalexam.crazydesignsco.service.UserService;
 import org.springframework.data.domain.Page;

@@ -133,7 +133,6 @@ public class DesignController {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.addDesignModel",
                     bindingResult);
 
-//            System.out.println(bindingResult);
             return "redirect:/designs/add";
         }
 
@@ -142,8 +141,6 @@ public class DesignController {
         return "redirect:/designs/all";
     }
 
-
-    // TODO - the search broke.. check it out
     @GetMapping("/designs/search")
     public String searchQuery(@Valid SearchDesignDTO searchDesignDTO,
                               BindingResult bindingResult,
@@ -199,7 +196,6 @@ public class DesignController {
         designService.editDesign(uuid, updateDesignDTO, userDetails);
         redirectAttributes.addFlashAttribute("designUpdated", true);
 
-//        return "redirect:/designs/all";
         return "redirect:/designs/{id}";
     }
 

@@ -35,7 +35,6 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
-
     @GetMapping("/login")
     public String login() {
         return "auth-login";
@@ -74,30 +73,23 @@ public class UserController {
         UserServiceModel userServiceModel = userService.findUserByIdReturnUserModel(id).
                 orElseThrow(() -> new ObjectNotFoundException("User with ID " +
                         id + " not found!"));
-        System.out.println("status 1" + userServiceModel.toString());
+
 
         UserUpdateDTO userUpdateDTO = userMapper.userServiceModelToUserUpdateDto(userServiceModel);
         String email = userUpdateDTO.getEmail();
-        System.out.println("status 2" + userUpdateDTO.toString());
         model.addAttribute("userUpdateDTO", userUpdateDTO);
-//        added from other
+
         model.addAttribute("userRoles", userService.findUserRolesByEmail(email).toString());
-//                .addAttribute("email", email);
 
         return "profile-user";
     }
 
     @PostMapping("/profile/{id}")
     public String editUserProfile(@PathVariable("id") Long id,
-                       @Valid UserUpdateDTO userUpdateDTO,
+                                  @Valid UserUpdateDTO userUpdateDTO,
                                   @RequestParam String userRole,
-                       BindingResult bindingResult,
-                       RedirectAttributes redirectAttributes) {
-
-//        Long id = userService.findByEmail(principal.getName()).getId();
-
-        System.out.println("role from UpdateDTO" + userRole);
-        System.out.println("Passwords: " + userUpdateDTO.getPassword() + " " + userUpdateDTO.getConfirmPassword());
+                                  BindingResult bindingResult,
+                                  RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors() ||
                 userService.existingEmailExceptId(userUpdateDTO.getEmail(), id) != null) {
@@ -105,13 +97,10 @@ public class UserController {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userUpdateDTO",
                     bindingResult);
 
-            System.out.println("test if printed: there are errors");
             if (userService.existingEmailExceptId(userUpdateDTO.getEmail(), id) != null) {
                 redirectAttributes.addFlashAttribute("emailFound", true);
             }
 
-
-//            System.out.println(new ArrayList<>(bindingResult.getAllErrors()));
             return "redirect:/users/profile/{id}";
         }
 
@@ -120,7 +109,7 @@ public class UserController {
 
             return "redirect:/users/profile/{id}";
         }
-        System.out.println("status 3");
+
 
         UserServiceModel userServiceModel = userMapper.userUpdateDtoToUserServiceModel(userUpdateDTO);
         UserRoleEnum userRoleEnum;
@@ -128,7 +117,6 @@ public class UserController {
         if (userRole != null && !userRole.isEmpty()) {
             userRoleEnum = UserRoleEnum.valueOf(userRole.toUpperCase());
             userServiceModel.setUserRoleEnum(userRoleEnum);
-            System.out.println(userServiceModel.getUserRoleEnum());
         }
 
         userService.editUser(id, userServiceModel);
@@ -136,30 +124,8 @@ public class UserController {
         redirectAttributes.addFlashAttribute("updatedUserProfile", true)
                 .addFlashAttribute("userId", id);
 
-        System.out.println("done editing");
-//        redirectAttributes.addFlashAttribute("profile", true);
-
         return "redirect:/users/all";
     }
-
-//    @PostMapping("/remove")
-//    public String removeRole(@RequestParam String email, @RequestParam String role,
-//                             RedirectAttributes redirectAttributes) {
-//        redirectAttributes.addFlashAttribute("email", email);
-//        userService.removeRole(email, role);
-//        redirectAttributes.addFlashAttribute("successfullyChangedRole", true);
-//        return "redirect:/roles/change";
-//    }
-
-//    TODO: Delete not working
-//    @PreAuthorize("isAdmin(#principal.getName())")
-//    @DeleteMapping("/users/{id}")
-//    public String deleteOffer(
-//            @PathVariable("id") Long id, Principal principal) {
-//        userService.deleteUserById(id);
-//
-//        return "redirect:/users/all";
-//    }
 
 }
 

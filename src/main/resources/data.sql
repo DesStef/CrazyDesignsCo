@@ -1,8 +1,8 @@
 -- some test users
 
 INSERT INTO users_roles (id, user_role_enum)
-values (1, 'ADMIN'),
-       (2, 'USER');
+values (11, 'ADMIN'),
+       (22, 'USER');
 
 INSERT INTO users (id, email, first_name, last_name, phone, image_url, is_active, want_deletion, password)
 VALUES (1, 'admin@example.com', 'Admin', 'Adminov', '0986 20 65 30', true, false , false ,
@@ -13,8 +13,8 @@ VALUES (1, 'admin@example.com', 'Admin', 'Adminov', '0986 20 65 30', true, false
 
 
 INSERT INTO users_user_roles (user_entity_id, user_roles_id)
-VALUES (1, 1),
-       (2, 2);
+VALUES (1, 11),
+       (2, 22);
 
 
 INSERT INTO rooms (id, room_type, square_metres)

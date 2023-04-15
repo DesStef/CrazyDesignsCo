@@ -59,7 +59,6 @@ public class ProfileController {
                                 id + " not found!"));
 
         MyProfileUpdateDTO myProfileUpdateDTO = userMapper.myProfileServiceModelToMyProfileUpdateDto(myProfileServiceModel);
-//        MyProfileUpdateDTO myProfileUpdateDTO = userMapper.userServiceModelToUserUpdateDto(myProfileServiceModel);
         model.addAttribute("myProfileUpdateDto", myProfileUpdateDTO);
 
         return "profile-edit";
@@ -79,8 +78,6 @@ public class ProfileController {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.myProfileUpdateDto",
                     bindingResult);
 
-            System.out.println(bindingResult.toString());
-
             if (userService.existingEmailExceptId(myProfileUpdateDTO.getEmail(), id) != null) {
                 redirectAttributes.addFlashAttribute("emailFound", true);
             }
@@ -89,12 +86,10 @@ public class ProfileController {
                 redirectAttributes.addFlashAttribute("noMatch", true);
             }
 
-            System.out.println(new ArrayList<>(bindingResult.getAllErrors()));
             return "redirect:/profile/me/edit";
         }
 
         MyProfileServiceModel myProfileServiceModel = userMapper.myProfileUpdateDtoToMyProfileServiceModel(myProfileUpdateDTO);
-//        MyProfileServiceModel myProfileServiceModel = userMapper.userUpdateDtoToUserServiceModel(myProfileUpdateDTO);
         userService.editMyProfile(id, myProfileServiceModel);
 
         redirectAttributes.addFlashAttribute("profile", true);

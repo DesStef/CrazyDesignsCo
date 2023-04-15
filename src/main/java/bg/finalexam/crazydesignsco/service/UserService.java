@@ -37,7 +37,6 @@ public interface UserService {
 
     Optional<MyProfileServiceModel> findUserByIdReturnMyProfileModel(Long userId);
 
-
     void deleteUserById(Long userId);
 
     List<String> findUserRolesByEmail(String email);

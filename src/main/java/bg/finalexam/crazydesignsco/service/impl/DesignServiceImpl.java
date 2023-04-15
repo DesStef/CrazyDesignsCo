@@ -242,16 +242,6 @@ public class DesignServiceImpl implements DesignService {
 
         pictureService.deletePicturesByDesign(designFromRepo);
 
-
-//        Set<PictureEntity> fromRepoPictures = designFromRepo.getPictures();
-//        for (PictureEntity pictureEntity : fromRepoPictures) {
-//            System.out.println("pic deleted" + pictureEntity);
-//
-//            pictureService.deletePicture(pictureEntity.getId());
-//        }
-
-//        pictureService.deletePicturesByDesign(designFromRepo);
-
         List<String> allImageUrls = editDesignDTO.getAllImageUrls();
         getPictureUrlsAndSavePictureEntities(allImageUrls, designFromRepo);
 

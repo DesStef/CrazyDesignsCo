@@ -2,10 +2,11 @@ spring:
     datasource:
         driverClassName: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://localhost:3306/designCo?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
-        username: root
-        password: 123456
+        username:
+        password:
     jpa:
         database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+#        database-platform: org.hibernate.dialect.MySQL5Dialect
         hibernate:
             ddl-auto: create-drop
         defer-datasource-initialization: true
