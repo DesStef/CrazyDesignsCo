@@ -216,7 +216,7 @@ public class UserServiceImpl implements UserService {
                 .orElse(null);
     }
 
-//    TODO UserDetailsView to be added
+
     @Override
     public Page<UserDetailsDTO> getAllUsers(Pageable pageable) {
         return userRepository.

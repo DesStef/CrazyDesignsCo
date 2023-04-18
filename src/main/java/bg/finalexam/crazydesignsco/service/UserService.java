@@ -49,6 +49,5 @@ public interface UserService {
 
     UserServiceModel existingEmailExceptId(String email, Long id);
 
-//    TODO: UserViewModel to be added
     Page<UserDetailsDTO> getAllUsers(Pageable pageable);
 }
