@@ -18,18 +18,25 @@
 <div th:replace="fragments/navbar">Navbar</div>
 
 
-<div class="container-fluid">
-    <h5 class="text-center text-dark mt-5">
-       Your need to be a registered user to be able to see the details of the designs.
+<div class="container-fluid ">
 
-        If you already have an account, please login here: <a th:href="@{/users/login}">Login</a>
-
-        If you want the create an account, please register here: <a th:href="@{/users/register}">Register</a>
-    </h5>
-</div>
-
+    <div class="align-content-center">
+        <h2 class="text-center text-danger">
+            You need to be a registered user to be able to see the details of the designs.
+        </h2>
+    </div>
+    <div class="align-content-center">
+        <h2 class="text-center text-danger">
+            If you already have an account, please login here: <a th:href="@{/users/login}">Login</a>
+        </h2>
+    </div>
+    <div class="align-content-center">
+        <h2 class="text-center text-danger">
+            If you want the create an account, please register here: <a th:href="@{/users/register}">Register</a>
+        </h2>
+    </div>
 <div>
-    <footer> </footer>
+    <footer></footer>
 </div>
 
 </body>

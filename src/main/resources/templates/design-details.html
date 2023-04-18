@@ -17,10 +17,12 @@
 
 <div th:replace="fragments/navbar">Navbar</div>
 <input type="hidden" name="designId" id="designId" th:value="${design.id}">
+
 <div class="container" th:if="${designUpdated}">
-<!--    <form th:if="${designUpdated}">-->
-        <h2 class="text-center text-danger font-italic mt-2 pb-1">You have successfully updated the details of the design :)</h2>
-<!--    </form>-->
+    <!--    <form th:if="${designUpdated}">-->
+    <h2 class="text-center text-danger font-italic mt-2 pb-1">You have successfully updated the details of the design
+        :)</h2>
+    <!--    </form>-->
 </div>
 
 <div th:object="${design}" class="container-fluid mt-2 pb-1">

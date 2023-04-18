@@ -77,7 +77,7 @@ public class DesignServiceImpl implements DesignService {
     @Override
     public Page<DesignsHighlightViewModel> getAllDesigns(Pageable pageable) {
 
-        List<DesignsHighlightViewModel> collect = designRepository.findAll(pageable).stream().map(design -> new DesignsHighlightViewModel(
+        return designRepository.findAll(pageable).map(design -> new DesignsHighlightViewModel(
                 design.getId(),
                 design.getTitle(),
                 design.getRoom().getRoomType(),
@@ -86,9 +86,7 @@ public class DesignServiceImpl implements DesignService {
                 design.getPrice(),
                 design.getStyle(),
                 design.getDate(),
-                design.getCreator().getId())).toList();
-
-        return convertToPage(collect, pageable);
+                design.getCreator().getId()));
     }
 
     @Override
@@ -97,7 +95,7 @@ public class DesignServiceImpl implements DesignService {
         UserEntity creator = userRepository.findByEmail(userDetails.getUsername()).
                 orElseThrow();
 
-        List<DesignsHighlightViewModel> collect = designRepository.findAllByCreator(pageable, creator).stream().map(design -> new DesignsHighlightViewModel(
+        return designRepository.findAllByCreator(pageable, creator).map(design -> new DesignsHighlightViewModel(
                 design.getId(),
                 design.getTitle(),
                 design.getRoom().getRoomType(),
@@ -106,9 +104,7 @@ public class DesignServiceImpl implements DesignService {
                 design.getPrice(),
                 design.getStyle(),
                 design.getDate(),
-                design.getCreator().getId())).toList();
-
-        return convertToPage(collect, pageable);
+                design.getCreator().getId()));
     }
 
     @Override
@@ -116,7 +112,7 @@ public class DesignServiceImpl implements DesignService {
 
         RoomTypeEnum otherRoom = RoomTypeEnum.OTHER;
 
-        List<DesignsHighlightViewModel> collect = designRepository.findAllByRoom_RoomType(pageable, otherRoom).stream().map(design -> new DesignsHighlightViewModel(
+        return designRepository.findAllByRoom_RoomType(pageable, otherRoom).map(design -> new DesignsHighlightViewModel(
                 design.getId(),
                 design.getTitle(),
                 design.getRoom().getRoomType(),
@@ -125,9 +121,7 @@ public class DesignServiceImpl implements DesignService {
                 design.getPrice(),
                 design.getStyle(),
                 design.getDate(),
-                design.getCreator().getId())).toList();
-
-        return convertToPage(collect, pageable);
+                design.getCreator().getId()));
     }
 
     @Override
@@ -135,7 +129,7 @@ public class DesignServiceImpl implements DesignService {
 
         StyleEnum otherStyle = StyleEnum.OTHER;
 
-        List<DesignsHighlightViewModel> collect = designRepository.findAllByStyle(pageable, otherStyle).stream().map(design -> new DesignsHighlightViewModel(
+        return designRepository.findAllByStyle(pageable, otherStyle).map(design -> new DesignsHighlightViewModel(
                 design.getId(),
                 design.getTitle(),
                 design.getRoom().getRoomType(),
@@ -144,9 +138,7 @@ public class DesignServiceImpl implements DesignService {
                 design.getPrice(),
                 design.getStyle(),
                 design.getDate(),
-                design.getCreator().getId())).toList();
-
-        return convertToPage(collect, pageable);
+                design.getCreator().getId()));
     }
 
 
